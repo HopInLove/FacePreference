@@ -1,0 +1,38 @@
+[
+  {
+    "userId": "u_alex",
+    "age": 22,
+    "orientation": "straight",
+    "languages": ["en", "fr"],
+    "neighborhood": "Plateau",
+    "maxTravelMins": 40,
+    "faceVector": [0.15, 0.18, 0.25, 0.35]
+  },
+  {
+    "userId": "u_bianca",
+    "age": 21,
+    "orientation": "straight",
+    "languages": ["fr"],
+    "neighborhood": "Griffintown",
+    "maxTravelMins": 35,
+    "faceVector": [0.25, 0.12, -0.05, 0.85]
+  },
+  {
+    "userId": "u_cedric",
+    "age": 23,
+    "orientation": "straight",
+    "languages": ["en"],
+    "neighborhood": "NDG",
+    "maxTravelMins": 30,
+    "faceVector": [0.65, -0.15, 0.02, 0.15]
+  },
+  {
+    "userId": "u_dana",
+    "age": 22,
+    "orientation": "straight",
+    "languages": ["en", "fr"],
+    "neighborhood": "Downtown",
+    "maxTravelMins": 25,
+    "faceVector": [-0.35, 0.45, 0.35, 0.08]
+  }
+]
