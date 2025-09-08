@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
     "lint": "eslint . --ext .ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "gen:data": "tsx scripts/generate_synthetic.ts"
   },
   "keywords": [],
   "author": "",
