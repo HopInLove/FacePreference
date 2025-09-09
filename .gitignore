@@ -2,3 +2,16 @@ node_modules/
 dist/
 .env
 .DS_Store
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+build/
+data/catalog/faces.json
+data/users/users.json
+ingest/images/
+*.onnx
+*.zip
+.insightface/
+.DS_Store
