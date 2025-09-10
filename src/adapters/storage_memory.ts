@@ -1,3 +1,4 @@
+// src/adapters/storage_memory.ts
 import { Storage } from "./storage.js";
 import {
   CalibrationEvent,
@@ -15,6 +16,7 @@ export class MemoryStorage implements Storage {
   private tastes: Map<string, TasteVector> = new Map();
   private candidates: Map<string, RankedCandidate[]> = new Map();
 
+  // ---- seed helpers (not in interface) ----
   seedCatalog(faces: Face[]) {
     faces.forEach((f) => this.catalog.set(f.faceId, f));
   }
@@ -24,6 +26,7 @@ export class MemoryStorage implements Storage {
     this.userFaces.set(userId, arr);
   }
 
+  // ---- catalog ----
   async listCatalogFaces(): Promise<Face[]> {
     return Array.from(this.catalog.values());
   }
@@ -31,6 +34,7 @@ export class MemoryStorage implements Storage {
     return this.catalog.get(faceId)?.vector ?? null;
   }
 
+  // ---- user faces (aggregate) ----
   async upsertUserFace(userId: string, vector: Vector): Promise<void> {
     const arr = this.userFaces.get(userId) ?? [];
     arr.push(vector);
@@ -42,12 +46,15 @@ export class MemoryStorage implements Storage {
     if (!arr || arr.length === 0) return null;
     const dim = arr[0].length;
     const mean = new Array(dim).fill(0);
-    for (const v of arr) for (let i = 0; i < dim; i++) mean[i] += v[i];
+    for (const v of arr) {
+      for (let i = 0; i < dim; i++) mean[i] += v[i];
+    }
     for (let i = 0; i < dim; i++) mean[i] /= arr.length;
     const norm = Math.sqrt(mean.reduce((s, x) => s + x * x, 0)) || 1;
     return mean.map((x) => x / norm);
   }
 
+  // ---- calibration events ----
   async saveCalibrationEvent(ev: CalibrationEvent): Promise<void> {
     const arr = this.calibration.get(ev.userId) ?? [];
     arr.push(ev);
@@ -58,6 +65,7 @@ export class MemoryStorage implements Storage {
     return this.calibration.get(userId) ?? [];
   }
 
+  // ---- tastes (learned vectors) ----
   async saveTasteVector(tv: TasteVector): Promise<void> {
     this.tastes.set(tv.userId, tv);
   }
@@ -65,6 +73,22 @@ export class MemoryStorage implements Storage {
     return this.tastes.get(userId) ?? null;
   }
 
+  // Convenience wrappers for mutual matching
+  attachTasteToUser(userId: string, taste: Vector): void {
+    const existing = this.tastes.get(userId);
+    if (existing) {
+      this.tastes.set(userId, { ...existing, vector: taste });
+    } else {
+      // if called before saveTasteVector, create a minimal record
+      this.tastes.set(userId, { userId, vector: taste, method: "ridge", sharpness: 0 });
+    }
+  }
+  getUserTaste(userId: string): Vector | null {
+    const tv = this.tastes.get(userId);
+    return tv ? tv.vector : null;
+  }
+
+  // ---- candidate cache (for MGOP phase) ----
   async saveCandidateCache(userId: string, items: CandidateFeatureRow[]): Promise<void> {
     const ranked: RankedCandidate[] = items
       .filter((r) => r.mgop !== undefined)

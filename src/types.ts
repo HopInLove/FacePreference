@@ -1,3 +1,4 @@
+// src/types.ts
 export type Vector = number[];
 
 export interface Face {
@@ -17,6 +18,8 @@ export interface User {
   ageMin?: number;
   ageMax?: number;
   hardNoSmokers?: boolean;
+  /** Learned from calibration (A-vs-B). May be null pre-calibration. */
+  tasteVector?: Vector | null;
 }
 
 export interface CalibrationPair {

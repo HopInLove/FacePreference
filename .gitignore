@@ -1,17 +1,29 @@
+# deps & env
 node_modules/
-dist/
-.env
-.DS_Store
 .venv/
-__pycache__/
-*.pyc
-node_modules/
 dist/
 build/
-data/catalog/faces.json
-data/users/users.json
-ingest/images/
-*.onnx
-*.zip
-.insightface/
+*.log
 .DS_Store
+
+# python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# local insightface models (not repo material)
+.insightface/
+
+# large datasets / images
+ingest/images/**
+
+# generated data artifacts (keep users.json, ignore heavy/generated files)
+data/catalog/**
+!data/catalog/faces.json   # keep this one if you want the small catalog tracked; remove this line to ignore it too
+data/tmp/**
+data/downloads/**
+
+# kaggle creds (should live in ~/.kaggle anyway)
+kaggle.json
+data/catalog/faces.json
+data/utkface/
